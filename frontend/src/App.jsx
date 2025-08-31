@@ -1,9 +1,17 @@
-import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './assets/auth/Login';
+import AllImage from './assets/wallpaper.jsx/AllImage';
 
-const App = () => {
+
+function App() {
   return (
-    <div className="bg-black m-2.5" >wallpaper website</div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login/>} />
+        <Route path="/home" element={<AllImage />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

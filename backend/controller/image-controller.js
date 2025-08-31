@@ -1,13 +1,13 @@
 const Image = require('../models/image-modules');
 const {uploadFileImage} = require('../helper/cloudinary');
-const fs = require(fs);
+const fs = require('fs');
 const cloudinary = require('../config/cloudinary');
 
 const ImageUploadSystem = async(req,res) => {
 
     try {
          if(!req.file){
-        return res.status(500).json({
+        return res.status(400).json({
             status:false,
         message:'faild to upload the image '
         });
@@ -19,7 +19,7 @@ const ImageUploadSystem = async(req,res) => {
     const newlyUploadImage = new Image({
         url,
         publicId,
-        uploadedBy:user.info.userId
+        uploadedBy:req.userInfo.userId
     });
 
     await newlyUploadImage.save();
@@ -28,9 +28,15 @@ const ImageUploadSystem = async(req,res) => {
 
     res.status(200).json({
         status:true,
-        message:'image uploaded scussfully'
+        message:'image uploaded scussfully',
+        image:newlyUploadImage,
+        url,
+        publicId
+
     })
     } catch (error) {
+       console.log(error);
+       
      res.status(400).json({
             status:false,
             message:'get some error in image uploading'
@@ -40,46 +46,51 @@ const ImageUploadSystem = async(req,res) => {
 
 }
 
-const fetchImageController = async(req,res)=>{
-    try {
-        const page = parseInt(req.query.page)||1;
-        const limit = parseInt(req.query.limit)||5;
-        const skip = (page = -1)*limit;
+const fetchImageController = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
 
-        const sortBy =  req.query.sortBy||'createdAt'
-        const sortOrder = req.query.sortOrder==='asc'?1:-1;
-        const imageTotal = await Image.countDocuments();
-        const totalPage = Math.ceil(imageTotal/limit);
-        
-        const sortObj = {};
-        sortObj[sortBy]=sortOrder;
-        
-        const image = await image.find().sort(sortObj).skip(skip).limit(limit);
-        if(image){
-            res.status(200).json({
-                success:true,
-                totalPage:totalPage,
-                imagetotal:imageTotal,
-                currentPage:page,
-                data:Image
-            });
-        };
+    const sortBy = req.query.sortBy || 'createdAt';
+    const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
 
-    } catch (error) {
-        res.status(400).json({
-            status:false,
-            message:'unable to fetch image'
-        })
+    const imageTotal = await Image.countDocuments();
+    const totalPage = Math.ceil(imageTotal / limit);
+
+    const sortObj = {};
+    sortObj[sortBy] = sortOrder;
+
+    const images = await Image.find().sort(sortObj).skip(skip).limit(limit);
+
+    if (images && images.length > 0) {
+      res.status(200).json({
+        success: true,
+        totalPage: totalPage,
+        imageTotal: imageTotal,
+        currentPage: page,
+        data: images,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'No images found',
+      });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to fetch images',
+    });
+  }
+};
 
-
-
-}
 
 const deleteImagefromDB = async (req,res)=>{
     try{
     const IdOfImage = req.params.id
-    const Image = await Image.findById(IdOfImage) 
+    const image = await Image.findById(IdOfImage) 
     if(!Image){
         return res.status(400).json({
             status:false,
@@ -87,7 +98,7 @@ const deleteImagefromDB = async (req,res)=>{
             
         });
     }
-    await cloudinary.uploader.destroy(Image.publicId);
+    await cloudinary.uploader.destroy(image.publicId);
     await Image.findByIdAndDelete(IdOfImage)
 res.status(200).json({
     success:true,
@@ -127,17 +138,21 @@ const fetchSingleImage = async (req, res) => {
       });
     }
 
-    // Cloudinary public_id should be stored in DB when you upload the image
-    const downloadUrl = cloudinary.url(singleImage.publicId, {
-      flags: "attachment:" + (singleImage.filename || "download.jpg"), // force download
-      fetch_format: "auto",
-      quality: "auto",
-    });
+    
+const uniqueName = `${singleImage._id}-${Date.now()}-${singleImage.filename || "image"}`;
+
+const downloadUrl = cloudinary.url(singleImage.publicId, {
+  resource_type: "image",       // 'image' if you uploaded an image
+  flags: "attachment",          // force download
+  attachment: uniqueName         // unique filename
+  // no fetch_format or quality applied
+});
+
 
     return res.status(200).json({
       success: true,
       image: singleImage,
-      downloadUrl, //  send the download link
+      download:downloadUrl, //  send the download link
     });
 
   } catch (error) {
