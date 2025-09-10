@@ -5,10 +5,14 @@ const authRoutes = require('./routes/user');
 const adminPage = require('./routes/admin-routes');
 const homePage = require('./routes/home-routes');
 const imageRoutes = require("./routes/image-routes")
+const cors = require("cors")
 const app = express();
 ConnectToDB();
 const PORT=3000; 
-
+app.use(cors({
+  origin: "http://localhost:5174", // replace with your React dev server port
+  credentials: true
+}));
 app.use(express.json());
 app.use('/api/auth',authRoutes);
 app.use('/api/add',adminPage);
