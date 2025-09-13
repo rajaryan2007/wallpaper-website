@@ -8,7 +8,7 @@ const Register = () => {
 
   const onSubmit = async (formData) => {
     try {
-      // fetch to data with post and get register 
+      
       const response = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
         headers: {
@@ -23,7 +23,7 @@ const Register = () => {
 
       const data = await response.json();
 
-      // saving token in localstorage
+     
       if (data.status==true){
         console.log("register compepte go to login page ");
         

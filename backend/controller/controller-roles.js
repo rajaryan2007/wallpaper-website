@@ -65,7 +65,9 @@ const loginUser = async (req,res)=>{
     if(!isPasswordMatch){
         return res.status(400).json({
             status:false,
-            message:'incorrect password please try again'
+            message:'incorrect password please try again',
+            
+            
         });
     };
     const acesstoken = jwt.sign({
@@ -84,7 +86,12 @@ const loginUser = async (req,res)=>{
     res.status(200).json({
         status:true,
         message:'login successfull',
-        acesstoken
+        acesstoken,
+        user: {
+        email: emailfrom.email,
+        role: emailfrom.role,
+        username: emailfrom.username,
+      },
     });
 
 

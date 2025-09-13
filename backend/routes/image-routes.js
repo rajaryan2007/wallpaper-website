@@ -11,7 +11,7 @@ const authMiddleware = require("../middleware/user-middleware")
 router.post('/upload',authMiddleware,isadminUser,uploadmiddleware.single('image'),ImageUploadSystem);
 router.get("/all-image",authMiddleware, fetchImageController);
 router.get("/:id",authMiddleware, fetchSingleImage);
-router.delete("/:id",authMiddleware, isadminUser, deleteImagefromDB);
+router.delete("/delete/:id",authMiddleware, isadminUser, deleteImagefromDB);
 
 
 module.exports = router

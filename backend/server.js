@@ -10,7 +10,7 @@ const app = express();
 ConnectToDB();
 const PORT=3000; 
 app.use(cors({
-  origin: "http://localhost:5174", // replace with your React dev server port
+  origin: "http://localhost:5173", // replace with your React dev server port
   credentials: true
 }));
 app.use(express.json());
