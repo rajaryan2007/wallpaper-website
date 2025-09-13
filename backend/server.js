@@ -10,7 +10,8 @@ const app = express();
 ConnectToDB();
 const PORT=3000; 
 app.use(cors({
-  origin: "http://localhost:5173", // replace with your React dev server port
+  origin: "https://wallpaper-website-1nqz.vercel.app",
+   // replace with your React dev server port
   credentials: true
 }));
 app.use(express.json());
