@@ -14,7 +14,7 @@ const UploadImage = () => {
       return;
     }
 
-    
+        
     setDisabled(true);
     setTimeout(() => setDisabled(false), 4000);
 
@@ -22,7 +22,7 @@ const UploadImage = () => {
     formData.append("image", file);
 
     try {
-      const response = await fetch("http://localhost:3000/api/image/upload", {
+      const response = await fetch("https://wallpaper-website-eta.vercel.app/api/image/upload", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -11,7 +11,7 @@ const AllImage = () => {
   const fetchAllImage = async (page = 1) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/image/All-image?page=${page}&limit=6`,
+        `https://wallpaper-website-eta.vercel.app/api/image/All-image?page=${page}&limit=6`,
         {
           method: "GET",
           headers: {

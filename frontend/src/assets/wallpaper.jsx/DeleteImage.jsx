@@ -11,7 +11,7 @@ const DeleteImage = () => {
     const fetchAllImage = async (page = 1) => {
         try {
             const response = await fetch(
-                `http://localhost:3000/api/image/All-image?page=${page}&limit=6`,
+                `https://wallpaper-website-eta.vercel.app/api/image/All-image?page=${page}&limit=6`,
                 {
                     method: "GET",
                     headers: {
@@ -36,7 +36,7 @@ const DeleteImage = () => {
     };
     async function handleDelete(ID) {
         try {
-            const response = await fetch(`http://localhost:3000/api/image/delete/${ID}`, {
+            const response = await fetch(`https://wallpaper-website-eta.vercel.app/api/image/delete/${ID}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,

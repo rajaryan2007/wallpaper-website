@@ -96,7 +96,7 @@ function App() {
             }
           />
 
-          {/* Default redirect */}
+
           <Route path="*" element={<Navigate to="/all-image" replace />} />
         </Routes>
       

@@ -8,7 +8,7 @@ const SingleImage = () => {
 
   const fetchSingleImage = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/image/${id}`, {
+      const response = await fetch(`https://wallpaper-website-eta.vercel.app/api/image/${id}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
